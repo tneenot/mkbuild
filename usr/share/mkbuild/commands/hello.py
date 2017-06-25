@@ -25,16 +25,18 @@ __year__ = 2017
 # Import
 import os, sys, getopt
 
+
 # Functions
 def usage():
     print("'" + APP_NAME + "' is a convenience command for mkbuild testing commands repository access.")
 
     print("\nUsage:")
-    print("\t" , APP_NAME,"[-?|--help] [-v|--version]")
+    print("\t", APP_NAME, "[-?|--help] [-v|--version]")
 
     print("\nParameters:")
     print("\t-?|--help: shows this help.")
     print("\t-v|--version: shows the current version.")
+
 
 def read_args(argv):
     try:
@@ -54,12 +56,13 @@ def read_args(argv):
                   "redistribute it under GPLv3 conditions.")
             sys.exit()
 
+
 def main(args):
     """main function"""
     read_args(args)
     print("Hello world test command")
 
+
 if __name__ == "__main__":
     APP_NAME = os.path.basename(sys.argv[0].split('.')[0])
     main(sys.argv[1:])
-

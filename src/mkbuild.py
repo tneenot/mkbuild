@@ -25,7 +25,6 @@ import glob
 
 from mkbuild.core import *
 
-
 # ## Metadata
 __author__ = "Tioben Neenot"
 __version__ = "0.1.00"
@@ -35,7 +34,7 @@ __year__ = 2017
 # ## Globals
 MKBUILD_CONFIG_FILE = ".mkbuild"
 MKBUILD_CONFIG = dict()
-MKBUILD_COMMANDS= ""
+MKBUILD_COMMANDS = ""
 
 
 def usage():
@@ -105,7 +104,7 @@ def read_project_configuration():
 
 def search_command_and_run_it(values):
     if len(values) >= 1:
-        command = glob.glob(MKBUILD_COMMANDS + "/" + values[0]+ ".py")
+        command = glob.glob(MKBUILD_COMMANDS + "/" + values[0] + ".py")
         if len(command) == 0:
             raise Exception("Command " + values[0] + " not found")
 
@@ -113,7 +112,6 @@ def search_command_and_run_it(values):
             os.system(command[0] + " " + " ".join(str(s) for s in values[1:]))
         else:
             os.system(command[0])
-
 
 
 def read_args(argv):
@@ -152,7 +150,6 @@ def read_args(argv):
     search_command_and_run_it(values)
 
 
-
 def main(args):
     """main function"""
     read_args(args)
@@ -162,6 +159,6 @@ def main(args):
 # ### Main method
 if __name__ == "__main__":
     WORKING_DIR = os.path.dirname(sys.argv[0])
-    MKBUILD_COMMANDS = os.getenv("MKBUILD_COMMANDS","/usr/share/mkbuild/commands/")
+    MKBUILD_COMMANDS = os.getenv("MKBUILD_COMMANDS", "/usr/share/mkbuild/commands/")
     APP_NAME = os.path.basename(sys.argv[0])
     main(sys.argv[1:])
