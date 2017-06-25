@@ -44,7 +44,7 @@ def usage():
     print("\nParameters:")
     print("\t-?|--help: shows this help.")
     print("\t-v|--version: shows the current version.")
-    print("\t--resume: shows only the sum up of the help command")
+    print("\t--resume: shows only the sum up of the help.")
 
 
 def read_args(argv):
