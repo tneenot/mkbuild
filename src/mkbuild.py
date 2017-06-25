@@ -38,18 +38,14 @@ MKBUILD_COMMANDS = ""
 
 
 def usage():
-    print(APP_NAME, "is a convenience application for project building management")
-    print("")
-    print(APP_NAME,
-          "[-?|--help] [-v|--version] [-p|--project=<project_name> [-m|--scm <scm_type>] -i|-init <working_directory>]")
-    print("")
-    print("Parameters:")
+    print("'" + APP_NAME + "' is a convenience application for project building management")
+
+    print("\nUsage:")
+    print("\t", APP_NAME, "[-?|--help] [-v|--version] <command> <options>")
+
+    print("\nParameters:")
     print("\t-?|--help: shows this help.")
     print("\t-v|--version: shows the current version.")
-    print("\t-p|--project: project's name.")
-    print("\t-m|--scm: initial software configuration management type. Use following key is supported: git.")
-    print(
-        "\t-i|-init: initialize the given working directory as the main project directory. The --project argument must be dekFINEd before this option.")
 
 
 def create_project_config_file(directoryPath, projectName):
@@ -146,5 +142,5 @@ def main(args):
 if __name__ == "__main__":
     WORKING_DIR = os.path.dirname(sys.argv[0])
     MKBUILD_COMMANDS = os.getenv("MKBUILD_COMMANDS", "/usr/share/mkbuild/commands/")
-    APP_NAME = os.path.basename(sys.argv[0])
+    APP_NAME = os.path.basename(sys.argv[0].split('.')[0])
     main(sys.argv[1:])
