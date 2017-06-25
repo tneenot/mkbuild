@@ -22,7 +22,7 @@ import glob
 import os
 import sys
 import time
-from core import *
+from commands.core.core import *
 
 
 # ## Metadata
@@ -31,12 +31,8 @@ __version__ = "0.1.00"
 __email__ = "tioben.neenot@laposte.net"
 __year__ = 2017
 
-# ## Globals
-MKBUILD_CONFIG_FILE = ".mkbuild"
-MKBUILD_CONFIG = dict()
-MKBUILD_COMMANDS = ""
 
-
+# Functions
 def get_command_list(commandPath):
     return [command for command in glob.glob(commandPath + "/*.py")]
 
@@ -50,7 +46,7 @@ def usage():
     print("\nParameters:")
     print("\t-?|--help: shows this help.")
     print("\t-v|--version: shows the current version.")
-    commands = get_command_list(MKBUILD_COMMANDS)
+    commands = get_command_list(Global.MKBUILD_COMMANDS)
     if len(commands) > 0:
         print("\nCommands:")
         for command in commands:
@@ -59,10 +55,10 @@ def usage():
 
 def create_project_config_file(directoryPath, projectName):
     """Create the project configuration file to the directory path"""
-    if os.path.isfile(directoryPath + "/" + MKBUILD_CONFIG_FILE) is True:
+    if os.path.isfile(directoryPath + "/" + Global.MKBUILD_CONFIG_FILE) is True:
         return
 
-    config_file = open(directoryPath + "/" + MKBUILD_CONFIG_FILE, "w", encoding="utf-8")
+    config_file = open(directoryPath + "/" + Global.MKBUILD_CONFIG_FILE, "w", encoding="utf-8")
     config_file.write("# Creation date: " + time.asctime() + "\n")
     config_file.write("project = " + projectName + "\n")
     config_file.write("author = " + os.environ['USER'] + "\n")
@@ -93,8 +89,8 @@ def init_project_on(directoryPath, projectName, **kwargs):
 
 def read_project_configuration():
     """Read the project configuration file if exists"""
-    if os.path.isfile(MKBUILD_CONFIG_FILE):
-        config_file = open(MKBUILD_CONFIG_FILE, "r")
+    if os.path.isfile(Global.MKBUILD_CONFIG_FILE):
+        config_file = open(Global.MKBUILD_CONFIG_FILE, "r")
         raw_buffer = config_file.read()
         config_file.close()
 
@@ -104,12 +100,12 @@ def read_project_configuration():
                 key, value = buf_line.split("=")
                 MKBUILD_CONFIG[key.strip()] = value.strip()
 
-        printv("Project name:", MKBUILD_CONFIG['project'])
+        printv("Project name:", Global.MKBUILD_CONFIG['project'])
 
 
 def retreive_command_and_run(values):
     if len(values) >= 1:
-        command = glob.glob(MKBUILD_COMMANDS + "/" + values[0] + ".py")
+        command = glob.glob(Global.MKBUILD_COMMANDS + "/" + values[0] + ".py")
         if len(command) == 0:
             raise Exception("Command " + values[0] + " not found")
 
@@ -150,6 +146,6 @@ def main(args):
 # ### Main method
 if __name__ == "__main__":
     WORKING_DIR = os.path.dirname(sys.argv[0])
-    MKBUILD_COMMANDS = os.getenv("MKBUILD_COMMANDS", "/usr/share/mkbuild/commands/")
+    Global.MKBUILD_COMMANDS = os.getenv("MKBUILD_COMMANDS", "/usr/share/mkbuild/commands/")
     APP_NAME = os.path.basename(sys.argv[0].split('.')[0])
     main(sys.argv[1:])

@@ -24,6 +24,11 @@ __year__ = 2017
 # Import
 from enum import Enum
 
+# ## Globals
+MKBUILD_CONFIG_FILE = ".mkbuild"
+MKBUILD_CONFIG = dict()
+MKBUILD_COMMANDS = ""
+
 
 # Enumerations
 class ErrorType(Enum):
@@ -39,8 +44,11 @@ class LogLevel(Enum):
     kDEPTH = 3
 
 
-# Global
-VERBOSE_LEVEL = LogLevel.kDEFAULT
+class Global(object):
+    LOG_VERBOSE_LEVEL = LogLevel.kDEFAULT
+    MKBUILD_CONFIG_FILE = ".mkbuild"
+    MKBUILD_CONFIG = dict()
+    MKBUILD_COMMANDS = ""
 
 
 # Functions
@@ -54,5 +62,5 @@ def printv(string="", *params, **kwargs):
     if len(kwargs) >= 1:
         verbose = kwargs['verbose']
 
-    if verbose.value <= VERBOSE_LEVEL.value:
+    if verbose.value <= Global.LOG_VERBOSE_LEVEL.value:
         print(string, *params)
