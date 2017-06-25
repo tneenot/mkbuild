@@ -102,7 +102,7 @@ def read_project_configuration():
         printv("Project name:", MKBUILD_CONFIG['project'])
 
 
-def search_command_and_run_it(values):
+def retreive_command_and_run(values):
     if len(values) >= 1:
         command = glob.glob(MKBUILD_COMMANDS + "/" + values[0] + ".py")
         if len(command) == 0:
@@ -116,13 +116,11 @@ def search_command_and_run_it(values):
 
 def read_args(argv):
     try:
-        args, values = getopt.getopt(argv, "?vp:m:i:", ["help", "version", "project=", "scm=" "init="])
+        args, values = getopt.getopt(argv, "?v", ["help", "version"])
     except getopt.GetoptError:
         usage()
         sys.exit(2)
 
-    project_name = None
-    scm_type = None
     for arg, value in args:
         if arg in ("-?", "--help"):
             usage()
@@ -133,27 +131,15 @@ def read_args(argv):
                   ".This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to "
                   "redistribute it under GPLv3 conditions.")
             sys.exit()
-        elif arg in ("-p", "--project"):
-            project_name = value
-        elif arg in ("-m", "--scm"):
-            scm_type = value
 
-        elif arg in ("-i", "--init"):
-            if project_name == None:
-                print("Missing --project argument", "\n", sys.stderr)
-                sys.exit(ErrorType.kMISSING_ARG.value)
-
-            return_value = init_project_on(value, project_name, scm=scm_type)
-            if return_value is not None:
-                sys.exit(return_value.value)
-
-    search_command_and_run_it(values)
+    return values
 
 
 def main(args):
     """main function"""
-    read_args(args)
+    values = read_args(args)
     read_project_configuration()
+    retreive_command_and_run(values)
 
 
 # ### Main method
