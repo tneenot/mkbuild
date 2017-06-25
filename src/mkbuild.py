@@ -18,12 +18,12 @@
 
 # imports
 import getopt
+import glob
 import os
 import sys
 import time
-import glob
+from core import *
 
-from mkbuild.core import *
 
 # ## Metadata
 __author__ = "Tioben Neenot"
@@ -37,6 +37,10 @@ MKBUILD_CONFIG = dict()
 MKBUILD_COMMANDS = ""
 
 
+def get_command_list(commandPath):
+    return [command for command in glob.glob(commandPath + "/*.py")]
+
+
 def usage():
     print("'" + APP_NAME + "' is a convenience application for project building management")
 
@@ -46,6 +50,11 @@ def usage():
     print("\nParameters:")
     print("\t-?|--help: shows this help.")
     print("\t-v|--version: shows the current version.")
+    commands = get_command_list(MKBUILD_COMMANDS)
+    if len(commands) > 0:
+        print("\nCommands:")
+        for command in commands:
+            os.system(command + " --resume")
 
 
 def create_project_config_file(directoryPath, projectName):

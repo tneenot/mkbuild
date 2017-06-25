@@ -27,20 +27,29 @@ import os, sys, getopt
 
 
 # Functions
+def usage_resume(withTab=False):
+    prefix = ""
+    if withTab == True:
+        prefix = "\t"
+
+    print(prefix, APP_NAME + ": a convenience command for mkbuild testing commands repository access.")
+
+
 def usage():
-    print("'" + APP_NAME + "' is a convenience command for mkbuild testing commands repository access.")
+    usage_resume()
 
     print("\nUsage:")
-    print("\t", APP_NAME, "[-?|--help] [-v|--version]")
+    print("\t", APP_NAME, "[-?|--help] [-v|--version] [--resume]")
 
     print("\nParameters:")
     print("\t-?|--help: shows this help.")
     print("\t-v|--version: shows the current version.")
+    print("\t--resume: shows only the sum up of the help command")
 
 
 def read_args(argv):
     try:
-        args, values = getopt.getopt(argv, "?v", ["help", "version"])
+        args, values = getopt.getopt(argv, "?v", ["help", "version", "resume"])
     except getopt.GetoptError:
         usage()
         sys.exit(2)
@@ -54,6 +63,9 @@ def read_args(argv):
             print(APP_NAME, "is distributed under GPLv3 condition. Copyright (C)", __year__, __author__,
                   ".This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to "
                   "redistribute it under GPLv3 conditions.")
+            sys.exit()
+        elif arg in ("--resume"):
+            usage_resume(True)
             sys.exit()
 
 
