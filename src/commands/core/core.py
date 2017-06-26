@@ -23,6 +23,7 @@ __year__ = 2017
 
 # Import
 from enum import Enum
+import time, os
 
 # ## Globals
 MKBUILD_CONFIG_FILE = ".mkbuild"
@@ -64,3 +65,15 @@ def printv(string="", *params, **kwargs):
 
     if verbose.value <= Global.LOG_VERBOSE_LEVEL.value:
         print(string, *params)
+
+
+def create_project_config_file(directory):
+    """Create the project configuration file to the directory path"""
+    if os.path.isfile(directory + "/" + Global.MKBUILD_CONFIG_FILE) is True:
+        return
+
+    config_file = open(directory + "/" + Global.MKBUILD_CONFIG_FILE, "w", encoding="utf-8")
+    config_file.write("# Creation date: " + time.asctime() + "\n")
+    config_file.write("project = " + directory + "\n")
+    config_file.write("author = " + os.environ['USER'] + "\n")
+    config_file.close()

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# Copyright (C) @YEAR@ -  @DEVELOPER@
+# Copyright (C) 2017 -  Tioben Neenot
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -17,16 +17,13 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Meta
-__author__ = "@DEVELOPER@"
-__version__ = "0.1.00"
-__email__ = "@EMAIL@"
-__year__ =
-
-
-@YEAR @
+__author__ = "Tioben Neenot"
+__version__ = "1.0.00"
+__email__ = "tioben.neenot@laposte.net"
+__year__ = 2017
 
 # Import
-import os, sys, getopt
+import sys, getopt
 from core.core import *
 
 
@@ -36,28 +33,44 @@ def usage_resume(withTab=False):
     if withTab == True:
         prefix = "\t"
 
-    print(prefix, APP_NAME + ": <not implemented yet>")
+    print(prefix, APP_NAME + ": create a new project.")
 
 
 def usage():
     usage_resume()
 
     print("\nUsage:")
-    print("\t", APP_NAME, "[-?|--help] [-v|--version] [--resume]")
+    print("\t", APP_NAME, "[-?|--help] [-v|--version] [--resume] [-g|--git] <project>")
 
     print("\nParameters:")
     print("\t-?|--help: shows this help.")
     print("\t-v|--version: shows the current version.")
     print("\t--resume: shows only the sum up of the help.")
+    print("\t-g|--git: run the git initialization")
+    print("\t<project>: name of project.")
+
+
+def create_project_directory(directory, gitInitialization):
+    if os.path.exists(directory):
+        raise FileExistsError("This directory projet exists yet: " + directory)
+
+    os.mkdir(directory, 0o765)
+    create_project_config_file(directory)
+
+    if gitInitialization == True:
+        os.system("git init " + directory)
+        # todo: Create standard .gitignore
+        # todo: set all current standard files as initial commit
 
 
 def read_args(argv):
     try:
-        args, values = getopt.getopt(argv, "?v", ["help", "version", "resume"])
+        args, values = getopt.getopt(argv, "?vg", ["help", "version", "git", "resume"])
     except getopt.GetoptError:
         usage()
         sys.exit(2)
 
+    git_init = False
     for arg, value in args:
         if arg in ("-?", "--help"):
             usage()
@@ -71,6 +84,11 @@ def read_args(argv):
         elif arg in ("--resume"):
             usage_resume(True)
             sys.exit()
+        elif arg in ("-g", "--git"):
+            git_init = True
+
+    if len(values) > 0:
+        create_project_directory(values[0], git_init)
 
 
 def main(args):

@@ -34,7 +34,7 @@ __year__ = 2017
 
 # Functions
 def get_command_list(commandPath):
-    return [command for command in glob.glob(commandPath + "/*.py")]
+    return [command for command in glob.glob(commandPath + "/*.py") if command.find("__init__.py", 0) == -1]
 
 
 def usage():
@@ -51,40 +51,6 @@ def usage():
         print("\nCommands:")
         for command in commands:
             os.system(command + " --resume")
-
-
-def create_project_config_file(directoryPath, projectName):
-    """Create the project configuration file to the directory path"""
-    if os.path.isfile(directoryPath + "/" + Global.MKBUILD_CONFIG_FILE) is True:
-        return
-
-    config_file = open(directoryPath + "/" + Global.MKBUILD_CONFIG_FILE, "w", encoding="utf-8")
-    config_file.write("# Creation date: " + time.asctime() + "\n")
-    config_file.write("project = " + projectName + "\n")
-    config_file.write("author = " + os.environ['USER'] + "\n")
-    config_file.close()
-
-
-def init_project_on(directoryPath, projectName, **kwargs):
-    """Initialize a project directory for the given path"""
-    WORKING_DIR = directoryPath
-    printv("Project directory:", WORKING_DIR)
-    try:
-        os.makedirs(WORKING_DIR)
-    except FileExistsError:
-        pass
-
-    if os.path.isdir(WORKING_DIR) == False:
-        return ErrorType.kNO_DIR
-
-    create_project_config_file(directoryPath, projectName)
-    # todo: import all standard models
-
-    if "scm" in kwargs and kwargs['scm'] != None:
-        if kwargs['scm'] == "git":
-            os.system("git init " + directoryPath)
-            # todo: Create standard .gitignore
-            # todo: set all current standard files as initial commit
 
 
 def read_project_configuration():
@@ -105,14 +71,24 @@ def read_project_configuration():
 
 def retreive_command_and_run(values):
     if len(values) >= 1:
-        command = glob.glob(Global.MKBUILD_COMMANDS + "/" + values[0] + ".py")
+        command = ""
+        try:
+            commands = get_command_list(Global.MKBUILD_COMMANDS)
+            command_idx = commands.index(Global.MKBUILD_COMMANDS + "/" + values[0] + ".py")
+            command = commands[command_idx]
+        except ValueError:
+            print("Command ", values[0], "not found")
+            sys.exit(2)
+
         if len(command) == 0:
             raise Exception("Command " + values[0] + " not found")
 
+        os.putenv("MKBUILD_COMMANDS", Global.MKBUILD_COMMANDS)
+
         if len(values) >= 2:
-            os.system(command[0] + " " + " ".join(str(s) for s in values[1:]))
+            os.system(command + " " + " ".join(str(s) for s in values[1:]))
         else:
-            os.system(command[0])
+            os.system(command)
 
 
 def read_args(argv):
