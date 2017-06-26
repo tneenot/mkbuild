@@ -77,3 +77,19 @@ def create_project_config_file(directory):
     config_file.write("project = " + directory + "\n")
     config_file.write("author = " + os.environ['USER'] + "\n")
     config_file.close()
+
+
+def read_project_configuration(directory):
+    """Read the project configuration file if exists"""
+    if os.path.isfile(directory + "/" + Global.MKBUILD_CONFIG_FILE):
+        config_file = open(directory + "/" + Global.MKBUILD_CONFIG_FILE, "r")
+        raw_buffer = config_file.read()
+        config_file.close()
+
+        buffer = raw_buffer.split("\n")
+        for buf_line in buffer:
+            if len(buf_line) > 0 and buf_line[0] != '#':
+                key, value = buf_line.split("=")
+                MKBUILD_CONFIG[key.strip()] = value.strip()
+
+        printv("Project name:", Global.MKBUILD_CONFIG['project'])

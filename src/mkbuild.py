@@ -53,22 +53,6 @@ def usage():
             os.system(command + " --resume")
 
 
-def read_project_configuration():
-    """Read the project configuration file if exists"""
-    if os.path.isfile(Global.MKBUILD_CONFIG_FILE):
-        config_file = open(Global.MKBUILD_CONFIG_FILE, "r")
-        raw_buffer = config_file.read()
-        config_file.close()
-
-        buffer = raw_buffer.split("\n")
-        for buf_line in buffer:
-            if len(buf_line) > 0 and buf_line[0] != '#':
-                key, value = buf_line.split("=")
-                MKBUILD_CONFIG[key.strip()] = value.strip()
-
-        printv("Project name:", Global.MKBUILD_CONFIG['project'])
-
-
 def retreive_command_and_run(values):
     if len(values) >= 1:
         command = ""
