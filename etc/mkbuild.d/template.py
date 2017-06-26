@@ -20,10 +20,7 @@
 __author__ = "@DEVELOPER@"
 __version__ = "0.1.00"
 __email__ = "@EMAIL@"
-__year__ =
-
-
-@YEAR @
+__year__ = @YEAR@
 
 # Import
 import os, sys, getopt
