@@ -23,58 +23,15 @@ __email__ = "tioben.neenot@laposte.net"
 __year__ = 2017
 
 # Import
-import os, sys, getopt
+from core.core import *
 
 
-# Functions
-def usage_resume(withTab=False):
-    prefix = ""
-    if withTab == True:
-        prefix = "\t"
-
-    print(prefix, APP_NAME + ": a convenience command for mkbuild testing commands repository access.")
-
-
-def usage():
-    usage_resume()
-
-    print("\nUsage:")
-    print("\t", APP_NAME, "[-?|--help] [-v|--version] [--resume]")
-
-    print("\nParameters:")
-    print("\t-?|--help: shows this help.")
-    print("\t-v|--version: shows the current version.")
-    print("\t--resume: shows only the sum up of the help.")
-
-
-def read_args(argv):
-    try:
-        args, values = getopt.getopt(argv, "?v", ["help", "version", "resume"])
-    except getopt.GetoptError:
-        usage()
-        sys.exit(2)
-
-    for arg, value in args:
-        if arg in ("-?", "--help"):
-            usage()
-            sys.exit()
-        elif arg in ("-v", "--version"):
-            print(APP_NAME, "version", __version__, ". Written by:", __author__ + ". ")
-            print(APP_NAME, "is distributed under GPLv3 condition. Copyright (C)", __year__, __author__,
-                  ".This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to "
-                  "redistribute it under GPLv3 conditions.")
-            sys.exit()
-        elif arg in ("--resume"):
-            usage_resume(True)
-            sys.exit()
-
-
-def main(args):
-    """main function"""
-    read_args(args)
-    print("Hello world test command")
+# Specific command implementation
+class HelloCommand(FacilityCommand):
+    def __init__(self):
+        super().__init__("a convenience command for mkbuild testing commands repository access.")
 
 
 if __name__ == "__main__":
-    APP_NAME = os.path.basename(sys.argv[0].split('.')[0])
-    main(sys.argv[1:])
+    hello_command = HelloCommand()
+    hello_command.read_args(sys.argv[1:])

@@ -19,9 +19,7 @@
 # imports
 import getopt
 import glob
-import os
 import sys
-import time
 from commands.core.core import *
 
 

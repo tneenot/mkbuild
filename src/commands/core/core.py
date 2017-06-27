@@ -23,7 +23,7 @@ __year__ = 2017
 
 # Import
 from enum import Enum
-import time, os
+import time, os, sys, getopt
 
 # ## Globals
 MKBUILD_CONFIG_FILE = ".mkbuild"
@@ -50,6 +50,80 @@ class Global(object):
     MKBUILD_CONFIG_FILE = ".mkbuild"
     MKBUILD_CONFIG = dict()
     MKBUILD_COMMANDS = ""
+
+
+class FacilityCommand(object):
+    """Facility class for new command implementation"""
+
+    def __init__(self, usage, command=os.path.basename(sys.argv[0].split('.')[0])):
+        self.__usage_text = usage
+        self.__app_name = command
+        Global.MKBUILD_COMMANDS = os.getenv("MKBUILD_COMMANDS", "/usr/share/mkbuild/commands/")
+
+    def __usage_resume(self, withTab=False):
+        tab_string = ""
+        if withTab == True:
+            tab_string = "\t"
+
+        print(tab_string, self.__app_name + ":", self.__usage_text)
+
+    def usage(self):
+        self.__usage_resume()
+
+        print("\nUsage:")
+        print("\t", self.__app_name, "[-?|--help] [-v|--version] [--resume]")
+        self.full_usage(self.__app_name)
+
+        print("\nParameters:")
+        print("\t-?|--help: shows this help.")
+        print("\t-v|--version: shows the current version.")
+        print("\t--resume: shows only the sum up of the help.")
+        self.other_usage_description(self.__app_name)
+
+    def full_usage(self, applicationName):
+        pass
+
+    def __read_standard_args(self, argv):
+        args = ()
+        values = ()
+        try:
+            args, values = getopt.getopt(argv, "?v", ["help", "version", "resume"])
+        except getopt.GetoptError:
+            try:
+                simple_arg, list_args = self.get_args_list()
+                args, values = getopt.getopt(argv, simple_arg, list_args)
+            except getopt.GetoptError:
+                self.usage()
+                sys.exit(2)
+
+        for arg, value in args:
+            if arg in ("-?", "--help"):
+                self.usage()
+                sys.exit()
+            elif arg in ("-v", "--version"):
+                print(self.__app_name, "version", __version__, ". Written by:", __author__ + ". ")
+                print(self.__app_name, "is distributed under GPLv3 condition. Copyright (C)", __year__, __author__,
+                      ".This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to "
+                      "redistribute it under GPLv3 conditions.")
+                sys.exit()
+            elif arg in ("--resume"):
+                self.__usage_resume(True)
+                sys.exit()
+
+        return args, values
+
+    def read_args(self, argv):
+        args, values = self.__read_standard_args(argv)
+        self.read_implementation_args(args, values)
+
+    def read_implementation_args(self, args, values):
+        pass
+
+    def other_usage_description(self, applicationName):
+        pass
+
+    def get_args_list(self):
+        return "", [""]
 
 
 # Functions
@@ -79,7 +153,7 @@ def create_project_config_file(directory):
     config_file.close()
 
 
-def read_project_configuration(directory):
+def read_project_configuration(directory=os.path.curdir):
     """Read the project configuration file if exists"""
     if os.path.isfile(directory + "/" + Global.MKBUILD_CONFIG_FILE):
         config_file = open(directory + "/" + Global.MKBUILD_CONFIG_FILE, "r")
