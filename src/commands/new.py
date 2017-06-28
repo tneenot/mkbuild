@@ -26,20 +26,6 @@ __year__ = 2017
 from core.core import *
 
 
-# Functions
-def create_project_directory(directory, gitInitialization):
-    if os.path.exists(directory):
-        raise FileExistsError("This directory projet exists yet: " + directory)
-
-    os.mkdir(directory, 0o765)
-    create_project_config_file(directory)
-
-    if gitInitialization == True:
-        os.system("git init " + directory)
-        # todo: Create standard .gitignore
-        # todo: set all current standard files as initial commit
-
-
 # Specific command implementation
 class NewCommand(FacilityCommand):
     def __init__(self):
@@ -52,7 +38,19 @@ class NewCommand(FacilityCommand):
                 git_init = True
 
         if len(values) > 0:
-            create_project_directory(values[0], git_init)
+            self.create_project_directory(values[0], git_init)
+
+    def create_project_directory(self, directory, gitInitialization):
+        if os.path.exists(directory):
+            raise FileExistsError("This directory projet exists yet: " + directory)
+
+        os.mkdir(directory, 0o765)
+        create_project_config_file(directory)
+
+        if gitInitialization == True:
+            os.system("git init " + directory)
+            # todo: Create standard .gitignore
+            # todo: set all current standard files as initial commit
 
     def other_usage_description(self, applicationName):
         print("\t-g|--git: run the git initialization")
