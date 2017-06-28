@@ -81,11 +81,14 @@ class FacilityCommand(object):
         self.other_usage_description(self.__app_name)
 
     def full_usage(self, applicationName):
+        """Override this method to define the full description with specifics parameters"""
+        pass
+
+    def other_usage_description(self, applicationName):
+        """Override this method to complete standard description with the specific description of your command"""
         pass
 
     def __read_standard_args(self, argv):
-        args = ()
-        values = ()
         try:
             args, values = getopt.getopt(argv, "?v", ["help", "version", "resume"])
         except getopt.GetoptError:
@@ -117,9 +120,7 @@ class FacilityCommand(object):
         self.read_implementation_args(args, values)
 
     def read_implementation_args(self, args, values):
-        pass
-
-    def other_usage_description(self, applicationName):
+        """Override this method for specific arguments reading and specific process running"""
         pass
 
     def get_args_list(self):
