@@ -32,6 +32,7 @@ class SpecificCommand(FacilityCommand):
         super().__init__("<Specific usage command>")
 
 
+# Main
 if __name__ == "__main__":
     specific_command = SpecificCommand()
     specific_command.read_args(sys.argv[1:])
