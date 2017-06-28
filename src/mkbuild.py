@@ -30,8 +30,7 @@ __email__ = "tioben.neenot@laposte.net"
 __year__ = 2017
 
 
-# Functions
-
+# Specific command implementation
 class MKBuildCommand(FacilityCommand):
     def __init__(self):
         super().__init__("is a convenience application for project building management")
@@ -67,8 +66,7 @@ class MKBuildCommand(FacilityCommand):
                 os.system(command)
 
 
-
-# ### Main method
+# Main
 if __name__ == "__main__":
     mkbuild_command = MKBuildCommand()
     mkbuild_command.read_args(sys.argv[1:])

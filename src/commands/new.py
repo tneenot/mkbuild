@@ -63,6 +63,7 @@ class NewCommand(FacilityCommand):
         return "g", ["git"]
 
 
+# Main
 if __name__ == "__main__":
     new_command = NewCommand()
     new_command.read_args(sys.argv[1:])

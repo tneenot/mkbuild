@@ -32,6 +32,7 @@ class HelloCommand(FacilityCommand):
         super().__init__("a convenience command for mkbuild testing commands repository access.")
 
 
+# Main
 if __name__ == "__main__":
     hello_command = HelloCommand()
     hello_command.read_args(sys.argv[1:])

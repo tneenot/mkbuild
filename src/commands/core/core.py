@@ -124,6 +124,7 @@ class FacilityCommand(object):
         pass
 
     def get_args_list(self):
+        """Override this method to return the specific arguments list conform to getops"""
         return "", [""]
 
 

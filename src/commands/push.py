@@ -23,87 +23,54 @@ __email__ = "tioben.neenot@laposte.net"
 __year__ = 2017
 
 # Import
-import os, sys, getopt
 from core.core import *
 
 
-# Functions
-def usage_resume(withTab=False):
-    prefix = ""
-    if withTab == True:
-        prefix = "\t"
+# Specific command implementation
+class PushCommand(FacilityCommand):
+    def __init__(self):
+        super().__init__("push a new command into the commands repository of mkbuild.")
 
-    print(prefix, APP_NAME + ": push a new command into the commands repository of mkbuild.")
+    def read_implementation_args(self, args, values):
+        override_mode = False
+        for arg, value in args:
+            if arg in ("-f", "--force"):
+                override_mode = True
 
+        if len(values) > 0:
+            self.push_command_to(Global.MKBUILD_COMMANDS, override_mode, values[0])
 
-def usage():
-    usage_resume()
+    def full_usage(self, applicationName):
+        print("\t", applicationName, "[-f|--force] <command>")
 
-    print("\nUsage:")
-    print("\t", APP_NAME, "[-?|--help] [-v|--version] [--resume] [-f|--force] <command>")
-
-    print("\nParameters:")
-    print("\t-?|--help: shows this help.")
-    print("\t-v|--version: shows the current version.")
-    print("\t--resume: shows only the sum up of the help.")
-    print("\t-f|--force: specifies if the command will override an existing one.")
-    print(
+    def other_usage_description(self, applicationName):
+        print("\t-f|--force: specifies if the command will override an existing one.")
+        print(
         "\t<command>: command to push into the " + Global.MKBUILD_COMMANDS + ". If command exists yet it won't be replaced, except if -f is defining.")
 
+    def get_args_list(self):
+        return "f", ["force"]
 
-def push_command_to(mkbuildCommandPath, overrideMode, command):
-    valid_copy = False
-    if os.path.exists(mkbuildCommandPath + "/" + command) == True:
-        if overrideMode == False:
-            print("Command", command, "exists yet.")
-            sys.exit(1)
-        elif overrideMode == True:
+    def push_command_to(self, mkbuildCommandPath, overrideMode, command):
+        valid_copy = False
+        if os.path.exists(mkbuildCommandPath + "/" + command) == True:
+            if overrideMode == False:
+                print("Command", command, "exists yet.")
+                sys.exit(1)
+            elif overrideMode == True:
+                valid_copy = True
+        else:
             valid_copy = True
-    else:
-        valid_copy = True
 
-    if valid_copy == True:
-        from shutil import copy2
-        import stat
-        copy2(command, mkbuildCommandPath)
-        os.chmod(mkbuildCommandPath + "/" + command,
-                 stat.S_IREAD | stat.S_IEXEC | stat.S_IWRITE | stat.S_IXOTH | stat.S_IROTH | stat.S_IWOTH | stat.S_IXGRP | stat.S_IRGRP | stat.S_IWOTH)
+        if valid_copy == True:
+            from shutil import copy2
+            import stat
+            copy2(command, mkbuildCommandPath)
+            os.chmod(mkbuildCommandPath + "/" + command,
+                     stat.S_IREAD | stat.S_IEXEC | stat.S_IWRITE | stat.S_IXOTH | stat.S_IROTH | stat.S_IWOTH | stat.S_IXGRP | stat.S_IRGRP | stat.S_IWOTH)
 
 
-def read_args(argv):
-    try:
-        args, values = getopt.getopt(argv, "?vf", ["help", "version", "force", "resume"])
-    except getopt.GetoptError:
-        usage()
-        sys.exit(2)
-
-    override_mode = False
-    for arg, value in args:
-        if arg in ("-?", "--help"):
-            usage()
-            sys.exit()
-        elif arg in ("-v", "--version"):
-            print(APP_NAME, "version", __version__, ". Written by:", __author__ + ". ")
-            print(APP_NAME, "is distributed under GPLv3 condition. Copyright (C)", __year__, __author__,
-                  ".This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to "
-                  "redistribute it under GPLv3 conditions.")
-            sys.exit()
-        elif arg in ("--resume"):
-            usage_resume(True)
-            sys.exit()
-        elif arg in ("-f", "--force"):
-            override_mode = True
-
-    if len(values) > 0:
-        push_command_to(Global.MKBUILD_COMMANDS, override_mode, values[0])
-
-
-def main(args):
-    """main function"""
-    read_args(args)
-
-
+# Main
 if __name__ == "__main__":
-    APP_NAME = os.path.basename(sys.argv[0].split('.')[0])
-    Global.MKBUILD_COMMANDS = os.getenv("MKBUILD_COMMANDS", "/usr/share/mkbuild/commands/")
-    main(sys.argv[1:])
+    push_command = PushCommand()
+    push_command.read_args(sys.argv[1:])
