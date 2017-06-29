@@ -59,6 +59,7 @@ class FacilityCommand(object):
         self.__usage_text = usage
         self.__app_name = command
         Global.MKBUILD_COMMANDS = os.getenv("MKBUILD_COMMANDS", "/usr/share/mkbuild/commands/")
+        Global.MKBUILD_CONFIG["template.dir"] = os.getenv("MKBUILD_TEMPLATE", "/etc/mkbuild.d")
 
     def __usage_resume(self, withTab=False):
         tab_string = ""
@@ -169,3 +170,7 @@ def read_project_configuration(directory=os.path.curdir):
                 MKBUILD_CONFIG[key.strip()] = value.strip()
 
         printv("Project name:", Global.MKBUILD_CONFIG['project'])
+
+
+def not_implemented_yet(arg=""):
+    print(arg, "not implemented yet")
