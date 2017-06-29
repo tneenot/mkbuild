@@ -31,7 +31,7 @@ class PushCommand(FacilityCommand):
     def __init__(self):
         super().__init__("push a new command into the commands repository of mkbuild.")
 
-    def read_implementation_args(self, args, values):
+    def read_command_args(self, args, values):
         override_mode = False
         for arg, value in args:
             if arg in ("-f", "--force"):
@@ -40,10 +40,10 @@ class PushCommand(FacilityCommand):
         if len(values) > 0:
             self.push_command_to(Global.MKBUILD_COMMANDS, override_mode, values[0])
 
-    def full_usage(self, applicationName):
+    def command_usage_resume(self, applicationName):
         print("\t", applicationName, "[-f|--force] <command>")
 
-    def other_usage_description(self, applicationName):
+    def command_usage_description(self, applicationName):
         print("\t-f|--force: specifies if the command will override an existing one.")
         print(
         "\t<command>: command to push into the " + Global.MKBUILD_COMMANDS + ". If command exists yet it won't be replaced, except if -f is defining.")

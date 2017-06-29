@@ -72,20 +72,20 @@ class FacilityCommand(object):
 
         print("\nUsage:")
         print("\t", self.__app_name, "[-?|--help] [-v|--version] [--resume]")
-        self.full_usage(self.__app_name)
+        self.command_usage_resume(self.__app_name)
 
         print("\nParameters:")
         print("\t-?|--help: shows this help.")
         print("\t-v|--version: shows the current version.")
         print("\t--resume: shows only the sum up of the help.")
-        self.other_usage_description(self.__app_name)
+        self.command_usage_description(self.__app_name)
 
-    def full_usage(self, applicationName):
-        """Override this method to define the full description with specifics parameters"""
+    def command_usage_resume(self, applicationName):
+        """Override this method to define the description resume of the command implementation with specifics parameters"""
         pass
 
-    def other_usage_description(self, applicationName):
-        """Override this method to complete standard description with the specific description of your command"""
+    def command_usage_description(self, applicationName):
+        """Override this method to complete command description with the specific description of your command"""
         pass
 
     def __read_standard_args(self, argv):
@@ -117,10 +117,10 @@ class FacilityCommand(object):
 
     def read_args(self, argv):
         args, values = self.__read_standard_args(argv)
-        self.read_implementation_args(args, values)
+        self.read_command_args(args, values)
 
-    def read_implementation_args(self, args, values):
-        """Override this method for specific arguments reading and specific process running"""
+    def read_command_args(self, args, values):
+        """Override this method for specific implementation command arguments reading and specific process running"""
         pass
 
     def get_args_list(self):

@@ -35,7 +35,8 @@ class MKBuildCommand(FacilityCommand):
     def __init__(self):
         super().__init__("is a convenience application for project building management")
 
-    def other_usage_description(self, applicationName):
+    def command_usage_description(self, applicationName):
+        print("\t<command>: command to run (see Commands below)")
         commands = self.__get_command_list(Global.MKBUILD_COMMANDS)
         if len(commands) > 0:
             print("\nCommands:")
@@ -45,7 +46,10 @@ class MKBuildCommand(FacilityCommand):
     def __get_command_list(self, commandPath):
         return [command for command in glob.glob(commandPath + "/*.py") if command.find("__init__.py", 0) == -1]
 
-    def read_implementation_args(self, args, values):
+    def command_usage_resume(self, applicationName):
+        print("\t", applicationName, "<command> [<args>]")
+
+    def read_command_args(self, args, values):
         if len(values) >= 1:
             try:
                 commands = self.__get_command_list(Global.MKBUILD_COMMANDS)

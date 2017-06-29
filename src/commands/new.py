@@ -31,7 +31,7 @@ class NewCommand(FacilityCommand):
     def __init__(self):
         super().__init__("create a new project.")
 
-    def read_implementation_args(self, args, values):
+    def read_command_args(self, args, values):
         git_init = False
         for arg, value in args:
             if arg in ("-g", "--git"):
@@ -52,11 +52,11 @@ class NewCommand(FacilityCommand):
             # todo: Create standard .gitignore
             # todo: set all current standard files as initial commit
 
-    def other_usage_description(self, applicationName):
+    def command_usage_description(self, applicationName):
         print("\t-g|--git: run the git initialization")
         print("\t<project>: name of project.")
 
-    def full_usage(self, applicationName):
+    def command_usage_resume(self, applicationName):
         print("\t", applicationName, "[-g|--git] <project>")
 
     def get_args_list(self):
