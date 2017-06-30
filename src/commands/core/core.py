@@ -60,6 +60,7 @@ class FacilityCommand(object):
         self.__app_name = command
         Global.MKBUILD_COMMANDS = os.getenv("MKBUILD_COMMANDS", "/usr/share/mkbuild/commands/")
         Global.MKBUILD_CONFIG["template.dir"] = os.getenv("MKBUILD_TEMPLATE", "/etc/mkbuild.d")
+        read_project_configuration()
 
     def __usage_resume(self, withTab=False):
         tab_string = ""
@@ -159,18 +160,45 @@ def create_project_config_file(directory):
 def read_project_configuration(directory=os.path.curdir):
     """Read the project configuration file if exists"""
     if os.path.isfile(directory + "/" + Global.MKBUILD_CONFIG_FILE):
-        config_file = open(directory + "/" + Global.MKBUILD_CONFIG_FILE, "r")
-        raw_buffer = config_file.read()
-        config_file.close()
+        raw_buffer = read_file_content(directory + "/" + Global.MKBUILD_CONFIG_FILE)
 
         buffer = raw_buffer.split("\n")
         for buf_line in buffer:
             if len(buf_line) > 0 and buf_line[0] != '#':
                 key, value = buf_line.split("=")
-                MKBUILD_CONFIG[key.strip()] = value.strip()
+                Global.MKBUILD_CONFIG[key.strip()] = value.strip()
 
-        printv("Project name:", Global.MKBUILD_CONFIG['project'])
+
+def read_file_content(file):
+    config_file = open(file, "r")
+    raw_buffer = config_file.read()
+    config_file.close()
+    return raw_buffer
 
 
 def not_implemented_yet(arg=""):
     print(arg, "not implemented yet")
+
+
+def parse_buffer(buffer):
+    """Parse the given buffer with awaiting values."""
+    if buffer.find("@PROJECT@") != -1:
+        buffer = buffer.replace("@PROJECT@", Global.MKBUILD_CONFIG["project"])
+
+    if buffer.find("@CREATIONDATE@") != -1:
+        buffer = buffer.replace("@CREATIONDATE@", time.asctime())
+
+    if buffer.find("@PROJECT.DIR@") != -1:
+        buffer = buffer.replace("@PROJECT.DIR@", os.curdir)
+
+    return buffer
+
+
+def copy_file_and_parse(source, target):
+    """Copy file from source to target and parse the target contents according to current configuration"""
+    raw_buffer = read_file_content(source)
+    final_buffer = parse_buffer(raw_buffer)
+
+    write_file = open(target, "w")
+    write_file.write(final_buffer)
+    write_file.close()

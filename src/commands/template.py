@@ -39,19 +39,28 @@ class TemplateCommand(FacilityCommand):
         print("\t-l|--list: list all available template files.")
 
     def read_command_args(self, args, values):
+        template_file_from = None
+        template_file_to = None
+
         for arg, value in args:
             if arg in ("-l", "--list"):
                 self.__show_template(self.__get_template_list())
             elif arg in ("-t", "--to"):
-                not_implemented_yet(arg)
+                template_file_to = value
             elif arg in ("-f", "--from"):
-                not_implemented_yet(arg)
+                template_file_from = Global.MKBUILD_CONFIG["template.dir"] + "/" + value
+
+        if template_file_to != None and template_file_from != None:
+            if os.path.exists(template_file_to) == True:
+                raise FileExistsError(template_file_to)
+
+            copy_file_and_parse(template_file_from, template_file_to)
 
     def command_usage_resume(self, applicationName):
         print("\t", applicationName, "[-l|--list] [-f|--from <template> -t|--to <target>]")
 
     def get_args_list(self):
-        return "lf:t:", ["list", "from:", "to:"]
+        return "lf:t:", ["list", "from=", "to="]
 
     def __get_template_list(self):
         return glob.glob(Global.MKBUILD_CONFIG["template.dir"] + "/*")
