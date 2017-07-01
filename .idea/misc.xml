@@ -80,6 +80,10 @@
       </profile-state>
     </entry>
   </component>
+  <component name="ProjectPlainTextFileTypeManager">
+    <file url="file://$PROJECT_DIR$/PrjTest/python.py" />
+    <file url="file://$PROJECT_DIR$/PrjTest/python2.py" />
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_3" project-jdk-name="Python 3.4.5 (/usr/bin/python3)" project-jdk-type="Python SDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>

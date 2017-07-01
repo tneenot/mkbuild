@@ -24,6 +24,7 @@ __year__ = 2017
 # Import
 from enum import Enum
 import time, os, sys, getopt
+import glob
 
 # ## Globals
 MKBUILD_CONFIG_FILE = ".mkbuild"
@@ -154,6 +155,7 @@ def create_project_config_file(directory):
     config_file.write("# Creation date: " + time.asctime() + "\n")
     config_file.write("project = " + directory + "\n")
     config_file.write("author = " + os.environ['USER'] + "\n")
+    config_file.write("email = <your email>\n")
     config_file.close()
 
 
@@ -190,6 +192,15 @@ def parse_buffer(buffer):
 
     if buffer.find("@PROJECT.DIR@") != -1:
         buffer = buffer.replace("@PROJECT.DIR@", os.curdir)
+
+    if buffer.find("@DEVELOPER@") != -1:
+        buffer = buffer.replace("@DEVELOPER@", Global.MKBUILD_CONFIG['author'])
+
+    if buffer.find("@EMAIL@") != -1:
+        buffer = buffer.replace("@EMAIL@", Global.MKBUILD_CONFIG["email"])
+
+    if buffer.find("@YEAR@") != -1:
+        buffer = buffer.replace("@YEAR@", str(time.gmtime().tm_year))
 
     return buffer
 

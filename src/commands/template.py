@@ -31,7 +31,7 @@ from core.core import *
 # Template command implementation
 class TemplateCommand(FacilityCommand):
     def __init__(self):
-        super().__init__("Create a new file from a template type.")
+        super().__init__("create a new file from a template type.")
 
     def command_usage_description(self, applicationName):
         print("\t-f|--from <template>: give the template name source.")
@@ -54,7 +54,8 @@ class TemplateCommand(FacilityCommand):
             if os.path.exists(template_file_to) == True:
                 raise FileExistsError(template_file_to)
 
-            copy_file_and_parse(template_file_from, template_file_to)
+            import shutil
+            shutil.copy2(template_file_from, template_file_to)
 
     def command_usage_resume(self, applicationName):
         print("\t", applicationName, "[-l|--list] [-f|--from <template> -t|--to <target>]")

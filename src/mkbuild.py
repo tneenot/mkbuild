@@ -17,9 +17,6 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # imports
-import getopt
-import glob
-import sys
 from commands.core.core import *
 
 
