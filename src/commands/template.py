@@ -50,12 +50,13 @@ class TemplateCommand(FacilityCommand):
             elif arg in ("-f", "--from"):
                 template_file_from = Global.MKBUILD_CONFIG["template.dir"] + "/" + value
 
-        if template_file_to != None and template_file_from != None:
-            if os.path.exists(template_file_to) == True:
-                raise FileExistsError(template_file_to)
+            if template_file_to != None and template_file_from != None:
+                if os.path.exists(template_file_to) == True:
+                    raise FileExistsError(template_file_to)
 
-            import shutil
-            shutil.copy2(template_file_from, template_file_to)
+                import shutil
+                shutil.copy2(template_file_from, template_file_to)
+                template_file_to = template_file_from = None
 
     def command_usage_resume(self, applicationName):
         print("\t", applicationName, "[-l|--list] [-f|--from <template> -t|--to <target>]")
