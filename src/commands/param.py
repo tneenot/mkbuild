@@ -32,7 +32,7 @@ class ParametersCommand(FacilityCommand):
         super().__init__("fix, list or update parameters for files into projects")
 
     def command_usage_resume(self, applicationName):
-        print("\t", applicationName, "[-l|--list] [-u|--update <file>]")
+        print("\t", applicationName, "[-l|--list] | [-u|--update <file>]")
 
     def get_args_list(self):
         return "lu:", ["list", "update="]
