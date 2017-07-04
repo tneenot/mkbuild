@@ -42,15 +42,18 @@ class NewCommand(FacilityCommand):
 
     def create_project_directory(self, directory, gitInitialization):
         if os.path.exists(directory):
-            raise FileExistsError("This directory projet exists yet: " + directory)
-
-        os.mkdir(directory, 0o765)
-        create_project_config_file(directory)
+            print("Directory projet exists yet: " + directory)
+        else:
+            os.mkdir(directory, 0o765)
+            create_project_config_file(directory)
 
         if gitInitialization == True:
-            os.system("git init " + directory)
-            # todo: Create standard .gitignore
-            # todo: set all current standard files as initial commit
+            if os.path.exists(directory + "/.git"):
+                print("Git directory exists yet")
+            else:
+                os.system("git init " + directory)
+                # todo: Create standard .gitignore
+                # todo: set all current standard files as initial commit
 
     def command_usage_description(self, applicationName):
         print("\t-g|--git: run the git initialization")
