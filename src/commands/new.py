@@ -45,7 +45,9 @@ class NewCommand(FacilityCommand):
             print("Directory projet exists yet: " + directory)
         else:
             os.mkdir(directory, 0o765)
-            create_project_config_file(directory)
+
+        printv("Create project file " + Global.MKBUILD_CONFIG_FILE)
+        create_project_config_file(directory)
 
         if gitInitialization == True:
             if os.path.exists(directory + "/.git"):
